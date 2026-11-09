@@ -84,7 +84,8 @@ def all_post_ids():
 
 
 def safe_name(name, limit=80):
-    name = re.sub(r'[\\/:*?"<>|\s]+', "-", name).strip("-.")
+    name = re.sub(r'[\\/:*?"<>|｜\s\[\]()（）{}#%&\'`!,，。、？！：；~^+=$@]+', "-", name)
+    name = re.sub(r"-{2,}", "-", name).strip("-.")
     return name[:limit] or "file"
 
 

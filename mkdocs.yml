@@ -1,0 +1,87 @@
+site_name: 茄利略・CUP 知識庫
+site_description: 茄利略・CUP Patreon 全部貼文整理、分類與教學課程（私人學習用途）
+docs_dir: docs
+site_dir: site
+use_directory_urls: false
+
+theme:
+  name: material
+  language: zh-TW
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: 深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: 淺色模式
+
+plugins:
+  - search:
+      lang:
+        - zh
+        - en
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - tags
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra_css:
+  - assets/extra.css
+
+nav:
+  - 首頁: index.md
+  - 課程:
+      - course/index.md
+      - 01 看市場: course/01-看市場.md
+      - 02 投資原則: course/02-投資原則.md
+      - 03 強勢股: course/03-強勢股.md
+      - 04 個人化投資組合: course/04-個人化投資組合.md
+  - 索引:
+      - 分類總覽: index/by-series.md
+      - 按主題: index/by-topic.md
+      - 按股票代號: index/by-ticker.md
+      - 時間線: index/timeline.md
+      - 標籤: tags.md
+  - 貼文:
+      - 交易學習筆記: posts/交易學習筆記/index.md
+      - 專題教學: posts/專題教學/index.md
+      - 頻道影片: posts/頻道影片/index.md
+      - 市場觀察筆記: posts/市場觀察筆記/index.md
+      - 市場資訊筆記: posts/市場資訊筆記/index.md
+      - 市場數據: posts/市場數據/index.md
+      - 公告: posts/公告/index.md
+      - 其他: posts/其他/index.md
+  - 關於: about.md
+
+not_in_nav: |
+  /posts/**/*.md

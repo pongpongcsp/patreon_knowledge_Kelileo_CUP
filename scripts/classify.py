@@ -1,7 +1,8 @@
 """Classify every post (topics, tickers, value, report type) -> kb/classification.json
 
 Topics are scored from keyword hits in the title (x4), body, attachment text and transcripts.
-kb/overrides.json ({id: {"topics": [...], "value": "..."}}) wins over the automatic result.
+kb/overrides.json and kb/overrides/*.json ({id: {"topics": [...], "value": "..."}}) win over the
+automatic result.
 
 Usage: python scripts/classify.py
 """
@@ -56,7 +57,7 @@ REPORT_TYPES = [
     ("美元相關係數", r"Correlati|相關係數"),
     ("Weekly Expected Move", r"(?i)expected\s*move"),
     ("財經日曆", r"經濟數據與央行事件|財經日曆"),
-    ("每週總結", r"每週總結"),
+    ("每週總結", r"每週總結|週末總結"),
     ("每日更新", r"每日更新|每日更新"),
     ("市場消息焦點", r"市場消息焦點|新聞消息摘要"),
     ("Podcast 筆記", r"(?i)podcast|All[- ]In"),
@@ -166,7 +167,10 @@ def value_of(cat, rtype):
 
 
 def main():
-    overrides = json.loads((KB / "overrides.json").read_text()) if (KB / "overrides.json").exists() else {}
+    overrides = {}
+    for f in sorted((KB / "overrides").glob("*.json")) + [KB / "overrides.json"]:
+        if f.exists():
+            overrides.update(json.loads(f.read_text()))
     out = {}
     for pid in all_post_ids():
         a = load_post(pid)["data"]["attributes"]

@@ -103,7 +103,11 @@ class Renderer:
                 s = n.get("text", "")
                 lead, core, trail = re.match(r"^(\s*)(.*?)(\s*)$", s, re.S).groups()
                 if core:
+                    seen = set()
                     for m in n.get("marks") or []:
+                        if m["type"] in seen:
+                            continue
+                        seen.add(m["type"])
                         mt = m["type"]
                         if mt == "bold":
                             core = f"**{core}**"
@@ -126,7 +130,8 @@ class Renderer:
         if t == "doc":
             return "\n\n".join(filter(None, (self.block(x, indent) for x in c)))
         if t == "paragraph":
-            return indent + self.inline(c).replace("\n", "\n" + indent)
+            # adjacent bold text nodes would otherwise produce "**a****b**"
+            return indent + self.inline(c).replace("\n", "\n" + indent).replace("****", "")
         if t == "heading":
             lvl = min(max(int((n.get("attrs") or {}).get("level", 3)), 2), 6)
             return f"{indent}{'#' * lvl} {self.inline(c).strip()}"
