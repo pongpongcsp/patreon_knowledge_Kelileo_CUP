@@ -129,14 +129,18 @@ def youtube_id(url):
 def process(s, post_id, do_kf=True, do_whisper=True, force=False):
     out_path = TR_DIR / f"{post_id}.json"
     existing = json.loads(out_path.read_text()) if out_path.exists() and not force else []
-    done = {it["key"] for it in existing if it.get("segments") or it.get("keyframes")}
+    done = {it["key"] for it in existing
+            if it.get("segments") or (it.get("keyframes") and not do_whisper)}
     items = [it for it in existing if it["key"] in done]
+    old_kf = {it["key"]: it["keyframes"] for it in existing if it.get("keyframes")}
     d = load_post(post_id)
     a = d["data"]["attributes"]
     pf = a.get("post_file") or {}
 
     if a.get("post_type") == "video_external_file" and pf.get("url") and "video" not in done:
         item = {"key": "video", "label": "影片", "duration": pf.get("duration")}
+        if old_kf.get("video"):
+            item["keyframes"] = old_kf["video"]
         try:
             subs, variants = mux_variants(s, pf["url"])
             if subs:
@@ -145,7 +149,7 @@ def process(s, post_id, do_kf=True, do_whisper=True, force=False):
             elif do_whisper:
                 item["segments"], _ = transcribe_source(pf["url"])
                 item["method"] = "whisper-small"
-            if do_kf and variants:
+            if do_kf and variants and "keyframes" not in item:
                 high = next((u for h, u in variants if h == 1080), variants[-1][1])
                 item["keyframes"] = keyframes(post_id, variants[0][1], high, pf.get("duration"))
         except Exception as e:
