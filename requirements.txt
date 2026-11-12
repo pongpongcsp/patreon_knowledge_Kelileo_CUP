@@ -1,0 +1,8 @@
+requests==2.34.2
+PyYAML==6.0.3
+pymupdf==2.1
+pillow==13.0.0
+numpy==2.5.4
+faster-whisper==1.2.1
+mkdocs-material==9.8.1
+jieba==0.42.1
